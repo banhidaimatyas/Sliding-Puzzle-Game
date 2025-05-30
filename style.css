@@ -1,0 +1,30 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 auto;
+    width: 90vh;   
+}
+
+.grid-item {
+    border: calc(3vh * 0.1) solid #112D4E;
+    height: 30vh;
+    font-size: calc(30vh * 0.8);
+    aspect-ratio: 1 / 1;
+    background-color: #DBE2EF;
+}
+
+.number {
+  color: #DBE2EF;
+  background-color: #3F72AF;
+  width: 100%;  
+  height: 100%;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background-color: #F9F7F7;
+}
