@@ -44,8 +44,55 @@ export class NumberTile {
         div.innerText = this.value.toString();
         // 3. Hozzáad egy kattintás eseménykezelőt
         div.addEventListener('click', () => {
-            
+            const emptyPosition = this.emptyPosition;
+            if (emptyPosition !== null) {
+                this.setPosition(emptyPosition.x, emptyPosition.y);
+            }
         });
         return div;
     }
+
+    get emptyPosition(): { x: number; y: number } | null {
+        if (this.x === undefined || this.y === undefined) return null;
+
+        const left = { dx: -1, dy: 0 }
+        const right = { dx: 1, dy: 0 }
+        const up = { dx: 0, dy: -1 }
+        const down = { dx: 0, dy: 1 }
+        const directions = [
+            left, right, up, down
+        ];
+
+        for (const { dx, dy } of directions) {
+            const newX = this.x + dx;
+            const newY = this.y + dy;
+
+            if (
+                newX >= 0 &&
+                newX < this.size &&
+                newY >= 0 &&
+                newY < this.size  &&
+                this.checkIsEmpty(newX, newY)
+            ) {
+                return { x: newX, y: newY };
+            }
+        }
+
+        return null;
+    }
+
+    checkIsEmpty(x: number, y: number): boolean {
+    if (x < 0 || y < 0 || x >= this.size || y >= this.size) {
+        return false;
+    }
+
+    for (let i = 0; i < this.numbers.length; i++) {
+        const tile = this.numbers[i];
+        if (tile.x === x && tile.y === y) {
+            return false;
+        }
+    }
+
+    return true;
+}
 }
