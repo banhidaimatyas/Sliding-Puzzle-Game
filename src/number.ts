@@ -27,12 +27,25 @@ export class NumberTile {
         }
 
         // Létrehoz egy új div elemet a számhoz
-        // const div = this.createElement();
+        const div = this.createElement();
         const newId = `cell-${x}-${y}`;
         const newCell = document.getElementById(newId);
-        // if (newCell) newCell.appendChild(div);
+        if (newCell) newCell.appendChild(div);
 
         this.x = x;
         this.y = y;
+    }
+
+    createElement(): HTMLDivElement {
+        const div = document.createElement('div'); // 1. Létrehoz egy új div elemet a számhoz
+        // 2. Beállítja a megfelelő osztályt és szövegét
+        div.className = 'number';
+        div.dataset.number = this.value.toString();
+        div.innerText = this.value.toString();
+        // 3. Hozzáad egy kattintás eseménykezelőt
+        div.addEventListener('click', () => {
+            
+        });
+        return div;
     }
 }
