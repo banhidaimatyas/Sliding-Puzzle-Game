@@ -10,9 +10,7 @@ function createGrid(size: number): void {
     grid.className = 'grid-container';
     grid.style.display = 'grid';
     grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-
     const fragment = document.createDocumentFragment();
-
     for (let i = 0; i < size * size; i++) {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
@@ -23,15 +21,12 @@ function createGrid(size: number): void {
 
         fragment.appendChild(cell);
     }
-
     grid.appendChild(fragment);
     document.body.appendChild(grid);
 }
-
 function randomizeNumbers(): void {
     const maxTiles = size * size - 1;
     const placed: Set<string> = new Set();
-
     for (let value = 1; value <= maxTiles; value++) {
         let x = randomcord();
         let y = randomcord();
@@ -39,7 +34,6 @@ function randomizeNumbers(): void {
             x = randomcord();
             y = randomcord();
         }
-
         const tile = new NumberTile(value, numbers, size);
         tile.setPosition(x, y);
         numbers.push(tile);
@@ -49,7 +43,7 @@ function randomizeNumbers(): void {
 function isfree(x: number, y: number): boolean {
     const index = y * size + x;
     const cell = document.querySelector(`.grid-item:nth-child(${index + 1})`);
-    return cell !== null && cell.textContent === '';
+    return cell ? cell.innerHTML.trim() === '' : false;
 }
 function randomcord():number{
     return Math.floor(Math.random()*size)
