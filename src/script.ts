@@ -10,17 +10,23 @@ function createGrid(size: number): void {
     grid.className = 'grid-container';
     grid.style.display = 'grid';
     grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < size * size; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'grid-item';
-        const cellSize = `${90 / size}vh`;
-        cell.style.height = cellSize;
-        cell.style.lineHeight = cellSize;
-        cell.style.fontSize = `${(90 / size) * 0.8}vh`;
 
-        fragment.appendChild(cell);
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-item';
+            cell.id = `cell-${x}-${y}`;
+            const cellSize = `${90 / size}vh`;
+            cell.style.height = cellSize;
+            cell.style.lineHeight = cellSize;
+            cell.style.fontSize = `${(90 / size) * 0.8}vh`;
+
+            fragment.appendChild(cell);
+        }
     }
+
     grid.appendChild(fragment);
     document.body.appendChild(grid);
 }
