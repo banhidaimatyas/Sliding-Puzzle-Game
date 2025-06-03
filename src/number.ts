@@ -1,9 +1,9 @@
 export class NumberTile {
-    value: number;
-    numbers: NumberTile[];
-    x: number | undefined;
-    y: number | undefined;
-    size: number;
+    readonly value: number;
+    readonly numbers: NumberTile[];
+    private x: number | undefined;
+    public y: number | undefined;
+    public size: number;
 
     constructor(value: number, numbers: NumberTile[], size: number) {
         if (value < 1 || value >= size * size) {
@@ -18,7 +18,7 @@ export class NumberTile {
 
     }
 
-    setPosition(x: number, y: number): void {
+    public setPosition(x: number, y: number): void {
         // Ha a számnak már volt korábbi pozíciója, kitörli onnan
         if (this.x !== undefined && this.y !== undefined) {
             const oldId = `cell-${this.x}-${this.y}`;
@@ -36,7 +36,7 @@ export class NumberTile {
         this.y = y;
     }
 
-    createElement(): HTMLDivElement {
+    private createElement(): HTMLDivElement {
         const div = document.createElement('div'); // 1. Létrehoz egy új div elemet a számhoz
         // 2. Beállítja a megfelelő osztályt és szövegét
         div.className = 'number';
@@ -52,7 +52,24 @@ export class NumberTile {
         return div;
     }
 
-    get emptyPosition(): { x: number; y: number } | null {
+
+
+    private checkIsEmpty(x: number, y: number): boolean {
+        if (x < 0 || y < 0 || x >= this.size || y >= this.size) {
+            return false;
+        }
+
+        for (let i = 0; i < this.numbers.length; i++) {
+            const tile = this.numbers[i];
+            if (tile.x === x && tile.y === y) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public get emptyPosition(): { x: number; y: number } | null {
         if (this.x === undefined || this.y === undefined) return null;
 
         const left = { dx: -1, dy: 0 }
@@ -71,7 +88,7 @@ export class NumberTile {
                 newX >= 0 &&
                 newX < this.size &&
                 newY >= 0 &&
-                newY < this.size  &&
+                newY < this.size &&
                 this.checkIsEmpty(newX, newY)
             ) {
                 return { x: newX, y: newY };
@@ -80,19 +97,4 @@ export class NumberTile {
 
         return null;
     }
-
-    checkIsEmpty(x: number, y: number): boolean {
-    if (x < 0 || y < 0 || x >= this.size || y >= this.size) {
-        return false;
-    }
-
-    for (let i = 0; i < this.numbers.length; i++) {
-        const tile = this.numbers[i];
-        if (tile.x === x && tile.y === y) {
-            return false;
-        }
-    }
-
-    return true;
-}
 }
