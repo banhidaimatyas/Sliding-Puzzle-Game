@@ -1,56 +1,69 @@
 import { NumberTile } from './number.js';
 
-const size: number = 10;
-const numbers: NumberTile[] = [];
-createGrid(size)
-randomizeNumbers()
+export class Game {
+    private size: number;
+    private numbers: NumberTile[] = [];
 
-function createGrid(size: number): void {
-    const grid = document.createElement('div');
-    grid.className = 'grid-container';
-    grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-    
-    const fragment = document.createDocumentFragment();
+    constructor(size: number) {
+        this.size = size;
+        this.createGrid();
+        this.randomizeNumbers();
+    }
 
-    for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-item';
-            cell.id = `cell-${x}-${y}`;
-            const cellSize = `${90 / size}vh`;
-            cell.style.height = cellSize;
-            cell.style.lineHeight = cellSize;
-            cell.style.fontSize = `${(90 / size) * 0.8}vh`;
+    private createGrid(): void {
+        const grid = document.createElement('div');
+        grid.className = 'grid-container';
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = `repeat(${this.size}, 1fr)`;
 
-            fragment.appendChild(cell);
+        const fragment = document.createDocumentFragment();
+
+        for (let y = 0; y < this.size; y++) {
+            for (let x = 0; x < this.size; x++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-item';
+                cell.id = `cell-${x}-${y}`;
+                const cellSize = `${90 / this.size}vh`;
+                cell.style.height = cellSize;
+                cell.style.lineHeight = cellSize;
+                cell.style.fontSize = `${(90 / this.size) * 0.8}vh`;
+
+                fragment.appendChild(cell);
+            }
+        }
+
+        grid.appendChild(fragment);
+        document.body.appendChild(grid);
+    }
+
+    private randomizeNumbers(): void {
+        const maxTiles = this.size * this.size - 1;
+        const placed: Set<string> = new Set();
+
+        for (let value = 1; value <= maxTiles; value++) {
+            let x = this.randomCoord();
+            let y = this.randomCoord();
+            while (!this.isFree(x, y) || placed.has(`${x},${y}`)) {
+                x = this.randomCoord();
+                y = this.randomCoord();
+            }
+
+            const tile = new NumberTile(value, this.numbers, this.size);
+            tile.setPosition(x, y);
+            this.numbers.push(tile);
+            placed.add(`${x},${y}`);
         }
     }
 
-    grid.appendChild(fragment);
-    document.body.appendChild(grid);
-}
-function randomizeNumbers(): void {
-    const maxTiles = size * size - 1;
-    const placed: Set<string> = new Set();
-    for (let value = 1; value <= maxTiles; value++) {
-        let x = randomcord();
-        let y = randomcord();
-        while (!isfree(x, y) || placed.has(`${x},${y}`)) {
-            x = randomcord();
-            y = randomcord();
-        }
-        const tile = new NumberTile(value, numbers, size);
-        tile.setPosition(x, y);
-        numbers.push(tile);
-        placed.add(`${x},${y}`);
+    private isFree(x: number, y: number): boolean {
+        const index = y * this.size + x;
+        const cell = document.getElementById(`cell-${x}-${y}`);
+        return cell ? cell.innerHTML.trim() === '' : false;
+    }
+
+    private randomCoord(): number {
+        return Math.floor(Math.random() * this.size);
     }
 }
-function isfree(x: number, y: number): boolean {
-    const index = y * size + x;
-    const cell = document.querySelector(`.grid-item:nth-child(${index + 1})`);
-    return cell ? cell.innerHTML.trim() === '' : false;
-}
-function randomcord():number{
-    return Math.floor(Math.random()*size)
-}
+
+const game = new Game(10);
