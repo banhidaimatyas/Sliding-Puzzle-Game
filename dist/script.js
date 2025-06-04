@@ -53,4 +53,44 @@ export class Game {
         return Math.floor(Math.random() * this.size);
     }
 }
-const game = new Game(10);
+class GameUI {
+    input = null;
+    startButton = null;
+    init() {
+        this.createNumberInput();
+        this.createStartButton();
+    }
+    createNumberInput() {
+        this.input = document.createElement("input");
+        this.input.type = "number";
+        this.input.placeholder = "Írj be egy számot";
+        this.input.id = "number-input";
+        document.body.appendChild(this.input);
+    }
+    createStartButton() {
+        this.startButton = document.createElement("button");
+        this.startButton.textContent = "Start";
+        this.startButton.id = "start-button";
+        this.startButton.addEventListener("click", () => this.handleStart());
+        document.body.appendChild(this.startButton);
+    }
+    handleStart() {
+        if (!this.input || !this.startButton)
+            return;
+        const value = this.input.value;
+        const parsed = parseInt(value, 10);
+        if (isNaN(parsed) || parsed <= 0) {
+            console.log("Kérlek írj be egy pozitív egész számot.");
+            return;
+        }
+        console.log("Beírt szám:", parsed);
+        this.input.remove();
+        this.startButton.remove();
+        new Game(parsed);
+    }
+}
+function main() {
+    const ui = new GameUI();
+    ui.init();
+}
+main();
